@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="80dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tvLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:text="89" />
+
+    <TextView
+        android:id="@+id/tvStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        tools:text="Xietu Rd,Mengzi Rd" />
+
+    <TextView
+        android:id="@+id/tvTime1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        tools:text="18:40" />
+
+    <TextView
+        android:id="@+id/tvTime2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        tools:text="18:55" />
+
+</RelativeLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WhichWay</string>
+    <string name="expected_arrive_time">期望到达时间: %1$d:%2$d</string>
+</resources>
