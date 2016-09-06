@@ -9,7 +9,10 @@ import org.bangeek.shjt.web.services.WebService;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -22,6 +25,7 @@ import rx.schedulers.Schedulers;
 public class ServiceUtils {
     private final static String API_ADDRESS_QUERY = "http://www.jt.sh.cn/trafficWeb/lbs/modify.xml";
     private final static String BUS_LINE_LIST_QUERY = "px_line";
+    private final static String CAR_MONITOR_QUERY = "px_car_monitor";
     private static List<ApiModel> apiModels = null;
 
     public static void getApiList() {
@@ -75,6 +79,46 @@ public class ServiceUtils {
                         try {
                             InputStream is = new ByteArrayInputStream(s.getBytes(), 0, s.getBytes().length);
                             return XmlUtils.parse(is, XmlUtils.ParseType.BusLine);
+                        } catch (Exception ex) {
+                            Log.e(BuildConfig.TAG, "Parsing xml failed.");
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .subscribe(onNext,
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                //onError
+                                Log.e(BuildConfig.TAG, "Error: " + throwable);
+                            }
+                        }, new Action0() {
+                            @Override
+                            public void call() {
+                                //onComplete
+                                Log.d(BuildConfig.TAG, "Update API List successfully.");
+                            }
+                        });
+    }
+
+    public static void getCarsByLine(String lineId, String stopId, boolean direction, Action1<Object> onNext) {
+        ApiModel api = getApiByName(CAR_MONITOR_QUERY);
+        if (api == null) return;
+        String url = api.getUrl();
+        if (TextUtils.isEmpty(url)) return;
+        url = String.format("%s?lineid=%s&stopid=%s&direction=%s&my=%s&t=%s", url, lineId, stopId,
+                direction ? "true" : "false", "HELLOWORLD",
+                new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.CHINA).format(new Date(System.currentTimeMillis())));
+
+        WebService.getInstance().get(url)
+                .observeOn(Schedulers.io())
+                .map(new Func1<String, Object>() {
+                    @Override
+                    public Object call(String s) {
+                        try {
+                            InputStream is = new ByteArrayInputStream(s.getBytes(), 0, s.getBytes().length);
+                            return XmlUtils.parse(is, XmlUtils.ParseType.Cars);
                         } catch (Exception ex) {
                             Log.e(BuildConfig.TAG, "Parsing xml failed.");
                         }

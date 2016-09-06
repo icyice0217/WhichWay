@@ -3,6 +3,8 @@ package org.bangeek.shjt.utils;
 import android.util.Xml;
 
 import org.bangeek.shjt.models.ApiModel;
+import org.bangeek.shjt.models.Car;
+import org.bangeek.shjt.models.Cars;
 import org.bangeek.shjt.models.Line;
 import org.bangeek.shjt.models.LineCollection;
 import org.xmlpull.v1.XmlPullParser;
@@ -22,8 +24,9 @@ public class XmlUtils {
     public enum ParseType {
         ApiList,
         BusLine,
-        Detail,
-        DetailInfo
+        Cars,
+        LineDetail,
+        LineInfoDetail
     }
 
     public static Object parse(InputStream in, ParseType parseType) throws XmlPullParserException, IOException {
@@ -38,6 +41,9 @@ public class XmlUtils {
 
                 case BusLine:
                     return readLineList(parser);
+
+                case Cars:
+                    return readCars(parser);
 
                 default:
                     return null;
@@ -84,6 +90,79 @@ public class XmlUtils {
         }
         col.setList(entries);
         return col;
+    }
+
+    private static Cars readCars(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<Car> entries = new ArrayList<>();
+        Cars cars = new Cars();
+
+        parser.require(XmlPullParser.START_TAG, ns, "result");
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() == XmlPullParser.START_TAG) {
+                break;
+            }
+        }
+
+        parser.require(XmlPullParser.START_TAG, ns, "cars");
+        cars.setLineId(parser.getAttributeValue(null, "lineid"));
+
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+
+            String name = parser.getName();
+            if ("car".equals(name)) {
+                parser.require(XmlPullParser.START_TAG, ns, "car");
+
+                Car car = new Car();
+
+                while (parser.next() != XmlPullParser.END_TAG) {
+                    if (parser.getEventType() != XmlPullParser.START_TAG) {
+                        continue;
+                    }
+
+                    switch (parser.getName()) {
+                        case "terminal":
+                            car.setTerminal(text(parser));
+                            break;
+
+                        case "stopdis":
+                            car.setStopdis(text(parser));
+                            break;
+
+                        case "distance":
+                            car.setDistance(text(parser));
+                            break;
+
+                        case "time":
+                            car.setTime(text(parser));
+                            break;
+                    }
+                }
+
+                entries.add(car);
+            } else {
+                skip(parser);
+            }
+        }
+        cars.setCars(entries);
+        return cars;
+    }
+
+    private static String text(XmlPullParser parser) throws XmlPullParserException, IOException {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        String text = null;
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.TEXT) {
+                continue;
+            }
+
+            text = parser.getText();
+        }
+        return text;
     }
 
     private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {

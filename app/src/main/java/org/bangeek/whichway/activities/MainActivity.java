@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
                 break;
 
             case R.id.btnGo:
+                ServiceUtils.getCarsByLine("008900", "21", false, new Action1<Object>() {
+                    @Override
+                    public void call(Object o) {
+                        Log.d(App.TAG, "hello world!");
+                    }
+                });
                 break;
         }
     }

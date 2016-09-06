@@ -48,7 +48,8 @@ public class WebService {
                         Log.d(WebService.TAG, message);
                     }
                 }).setLevel(HttpLoggingInterceptor.Level.BODY))
-                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.36.112", 8888)))
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.215", 8888)))
+//                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.36.112", 8888)))
                 .build();
 
         Retrofit mRetrofit = new Retrofit.Builder()
