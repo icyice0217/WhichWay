@@ -4,14 +4,20 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.bangeek.shjt.utils.ServiceUtils;
 import org.bangeek.whichway.R;
+import org.bangeek.whichway.app.App;
+import org.bangeek.whichway.data.DataStore;
 
 import java.util.Calendar;
+
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, View.OnClickListener {
     private TextView mTvExpectedArriveTime;
@@ -37,6 +43,17 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
         mBtnAdjustTime.setOnClickListener(this);
         mBtnGo.setOnClickListener(this);
+
+        int version = DataStore.getBuslinesVersion(MainActivity.this);
+        if (ServiceUtils.hasUpdateLinesData(version)) {
+            ServiceUtils.getBusLineList(new Action1<Object>() {
+                @Override
+                public void call(Object o) {
+                    DataStore.saveBusLines(MainActivity.this, o);
+                    Log.d(App.TAG, "Bus Lines Data Updated!");
+                }
+            });
+        }
     }
 
     @Override
