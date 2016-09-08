@@ -9,12 +9,16 @@ import com.google.gson.Gson;
 import org.bangeek.shjt.models.Line;
 import org.bangeek.shjt.models.LineCollection;
 
+import java.lang.reflect.Type;
+
 /**
  * Created by BinGan on 2016/9/6.
  */
 public class DataStore {
     private static final String DATA_STORE_API_LIST = "DATA_STORE_API_LIST";
     private static final String DATA_STORE_BUS_LINES = "DATA_STORE_BUS_LINES";
+
+    public static final String STOP_LINE_JSON_ASSET = "linestop.json";
 
     public static void saveData(Context context, Object object, String name) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
@@ -28,6 +32,13 @@ public class DataStore {
         String data = sharedPreferences.getString(name, null);
         if (TextUtils.isEmpty(data)) return null;
         return new Gson().fromJson(data, classOfT);
+    }
+
+    public static <T> T loadData(Context context, String name, Type typeOfT) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        String data = sharedPreferences.getString(name, null);
+        if (TextUtils.isEmpty(data)) return null;
+        return new Gson().fromJson(data, typeOfT);
     }
 
     public static void saveBusLines(Context context, Object busLines) {

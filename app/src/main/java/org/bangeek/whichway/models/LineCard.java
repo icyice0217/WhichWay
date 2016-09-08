@@ -9,6 +9,8 @@ public class LineCard {
     private String mStop;
     private String mTime1;
     private String mTime2;
+    private int time1;
+    private int time2;
 
     public String getLine() {
         return mLine;
@@ -40,5 +42,21 @@ public class LineCard {
 
     public void setTime2(String time2) {
         this.mTime2 = time2;
+    }
+
+    public void setTime1Value(int time1) {
+        this.time1 = time1;
+    }
+
+    public int getTime1Value() {
+        return time1;
+    }
+
+    public void setTime2Value(int time2) {
+        this.time2 = time2;
+    }
+
+    public int getTime2Value() {
+        return time2;
     }
 }

@@ -5,14 +5,12 @@ import android.util.Log;
 
 import org.bangeek.shjt.BuildConfig;
 import org.bangeek.shjt.models.ApiModel;
+import org.bangeek.shjt.models.LineStop;
 import org.bangeek.shjt.web.services.WebService;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -102,14 +100,13 @@ public class ServiceUtils {
                         });
     }
 
-    public static void getCarsByLine(String lineId, String stopId, boolean direction, Action1<Object> onNext) {
+    public static void getCarsByLine(LineStop stop, Action1<Object> onNext) {
         ApiModel api = getApiByName(CAR_MONITOR_QUERY);
         if (api == null) return;
         String url = api.getUrl();
         if (TextUtils.isEmpty(url)) return;
-        url = String.format("%s?lineid=%s&stopid=%s&direction=%s&my=%s&t=%s", url, lineId, stopId,
-                direction ? "true" : "false", "HELLOWORLD",
-                new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.CHINA).format(new Date(System.currentTimeMillis())));
+        url = String.format("%s?lineid=%s&stopid=%s&direction=%s&%s", url, stop.getLineId(), stop.getStopId(),
+                stop.getDirection(), WebService.getSignParams());
 
         WebService.getInstance().get(url)
                 .observeOn(Schedulers.io())
