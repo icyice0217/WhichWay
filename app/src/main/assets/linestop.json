@@ -1,0 +1,34 @@
+[
+  {
+    "lineId": "008900",
+    "name": "89路",
+    "stopId": "21",
+    "stopName": "斜土路蒙自路",
+    "direction": false,
+    "walkTime": 150
+  },
+  {
+    "lineId": "010900",
+    "name": "109路",
+    "stopId": "9",
+    "stopName": "局门路斜土路",
+    "direction": false,
+    "walkTime": 350
+  },
+  {
+    "lineId": "004300",
+    "name": "43路",
+    "stopId": "16",
+    "stopName": "徐家汇路黄陂南路",
+    "direction": false,
+    "walkTime": 500
+  },
+  {
+    "lineId": "093100",
+    "name": "931路",
+    "stopId": "19",
+    "stopName": "徐家汇路黄陂南路",
+    "direction": false,
+    "walkTime": 500
+  }
+]

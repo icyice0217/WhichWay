@@ -6,8 +6,10 @@ import android.util.Log;
 import org.bangeek.shjt.factories.StringConverterFactory;
 import org.bangeek.shjt.web.interfs.IWebService;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -48,8 +50,6 @@ public class WebService {
                         Log.d(WebService.TAG, message);
                     }
                 }).setLevel(HttpLoggingInterceptor.Level.BODY))
-                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.215", 8888)))
-//                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.36.112", 8888)))
                 .build();
 
         Retrofit mRetrofit = new Retrofit.Builder()
@@ -64,5 +64,43 @@ public class WebService {
 
     public Observable<String> get(String url) {
         return mService.GetRequest(USER_AGENT, url);
+    }
+
+    public static String getSignParams() {
+        String time = new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.CHINA).format(new Date(System.currentTimeMillis()));
+        String my = getHashByMd5(time);
+        return String.format("my=%s&t=%s", my, time);
+    }
+
+    public static String getHashByMd5(String message) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(message.getBytes("UTF-8"));
+            return bytesToHexString(digest);
+        } catch (Exception ex) {
+            return "";
+        }
+    }
+
+    /**
+     * Convert byte[] to hex string
+     *
+     * @param src byte[] data
+     * @return hex string
+     */
+    public static String bytesToHexString(byte[] src) {
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString().toUpperCase();
     }
 }

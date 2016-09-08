@@ -17,9 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/expected_arrive_time"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:layout_centerVertical="true"
-            tools:text="期望到达时间: 19:00" />
+            tools:text="期望到时: 19:00" />
 
         <Button
             android:id="@+id/btnAdjustTime"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="可选线路："
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
@@ -57,8 +57,8 @@
             android:id="@+id/btnGo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GO"
-            android:textSize="24sp"
+            android:text="@string/main_activity_button_go"
+            android:textSize="20sp"
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
