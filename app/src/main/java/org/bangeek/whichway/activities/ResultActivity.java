@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class ResultActivity extends AppCompatActivity {
     private Subscription mSubscription;
     private Toast mToast;
     private CompositeSubscription mCompositeSubscription;
+    private boolean mIsRunning;
 
     @SuppressLint("ShowToast")
     @Override
@@ -66,6 +68,12 @@ public class ResultActivity extends AppCompatActivity {
         //Request data
         mRequestData = Observable
                 .interval(5, TimeUnit.SECONDS)
+                .filter(new Func1<Long, Boolean>() {
+                    @Override
+                    public Boolean call(Long aLong) {
+                        return mIsRunning;
+                    }
+                })
                 .map(new Func1<Long, String>() {
                     @Override
                     public String call(Long aLong) {
@@ -117,6 +125,7 @@ public class ResultActivity extends AppCompatActivity {
 
         mToast = Toast.makeText(App.context(), "Toast", Toast.LENGTH_SHORT);
 
+        mIsRunning = true;//Run
     }
 
     @Override
@@ -167,10 +176,33 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, Menu.FIRST, 0, "Start").setIcon(android.R.drawable.ic_media_play)
+                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, Menu.FIRST + 1, 1, "Pause").setIcon(android.R.drawable.ic_media_pause)
+                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(Menu.FIRST).setVisible(!mIsRunning);
+        menu.findItem(Menu.FIRST + 1).setVisible(mIsRunning);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            this.finish();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+
+            case Menu.FIRST:
+            case Menu.FIRST + 1:
+                mIsRunning = !mIsRunning;
+                invalidateOptionsMenu();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
